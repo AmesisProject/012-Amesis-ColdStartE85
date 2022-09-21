@@ -5,9 +5,11 @@
 
 
 void setup() {
-
+  Serial.begin(9600);
 }
 
 void loop() {
- 
+ Serial.print ("ArduinoRelais ");
+  Serial.println (1);
+ delay (1000);
 }
