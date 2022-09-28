@@ -4,7 +4,7 @@
 // Amesis Project
 // 29/09/2022
 // Projet : 
-// Version : v0.01
+// Version : v0.02
 
 #include <LapX9C10X.h>
 
@@ -49,6 +49,12 @@ void setup() {
 }
 
 void loop() {
+  //TO DO
+  // Pin entré pour jumper
+  // Pin entré pour sonde IAT ext Et le mapé 
+  //Condition si jp alors
+  //Condition si Temperature IAT ext. alors
+  
   int counter;      // Le int sert pour le microcontroleur du modul LAPX9C10X_X9C103
   float resistance; // Le float sert pour le microcontroleur du modul LAPX9C10X_X9C103
   
