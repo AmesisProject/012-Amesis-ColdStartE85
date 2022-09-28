@@ -1,7 +1,5 @@
-//012-Amesis-ColdStartE85 
-//v0.01 
-//25/08/2022
 #include <LapX9C10X.h>
+
 /*                                                                                                                                     
  * This example assumes you're using an X9C103 (10k) chip. For other variants,
  * Change the value in the line:
@@ -42,19 +40,19 @@
  *
  */
 
-#define CSPIN 7
-#define INCPIN 5
-#define UDPIN 6
+#define CSPIN 5
+#define INCPIN 6
+#define UDPIN 7
 
 
 LapX9C10X led(INCPIN, UDPIN, CSPIN, LAPX9C10X_X9C103);
 
 void setup() {
   Serial.begin(1152000);
-  //Serial.setTimeout(30000); // A voir si bloquent ou pas
+  Serial.setTimeout(30000);
   Serial.println("Starting");  
   led.begin(99);
-  delay(1000);
+  delay(5000);
 }
 
 void loop() {
