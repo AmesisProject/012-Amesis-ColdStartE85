@@ -1,5 +1,7 @@
+//012-Amesis-ColdStartE85 
+//v0.01 
+//25/08/2022
 #include <LapX9C10X.h>
-
 /*                                                                                                                                     
  * This example assumes you're using an X9C103 (10k) chip. For other variants,
  * Change the value in the line:
@@ -40,26 +42,27 @@
  *
  */
 
-#define CSPIN 5
-#define INCPIN 6
-#define UDPIN 7
+#define CSPIN 7
+#define INCPIN 5
+#define UDPIN 6
 
 
 LapX9C10X led(INCPIN, UDPIN, CSPIN, LAPX9C10X_X9C103);
 
 void setup() {
-  Serial.begin(1152000);
-  Serial.setTimeout(30000);
-  Serial.println("Starting");  
+  Serial.begin(115200);
+  //Serial.setTimeout(30000); // A voir si bloquent ou pas
+  //Serial.println("Starting");  
   led.begin(99);
-  delay(5000);
+  delay(1000);
+
 }
 
 void loop() {
-  uint8_t counter;
+  //uint8_t counter;
   float resistance;
   
-  Serial.print("Enter counter value: ");
+ /* Serial.print("Enter counter value: ");
   counter = Serial.parseInt();
   Serial.println(counter);
   led.set(counter);
@@ -68,14 +71,19 @@ void loop() {
   Serial.print(", resistance = ");
   Serial.print(led.getK());
   Serial.println("KOhms");
+  */
 
-  Serial.print("Enter resistance in kOhms: ");
-  resistance = Serial.parseFloat();
-  Serial.println(resistance);
+ // Serial.print("Enter resistance in kOhms: ");
+  
+  Serial.print("J'envoie ");
+  resistance = 5;
+  Serial.print(resistance);
+  Serial.println(" kOhms ");
+
+  Serial.print("Je reçoi ");
   led.set(resistance);
-  Serial.print("Counter = ");
-  Serial.print(led.get());
-  Serial.print(", resistance = ");
+  //Serial.print(led.get());
   Serial.print(led.getK());
   Serial.println("KOhms");
+  delay (1000);
 }
