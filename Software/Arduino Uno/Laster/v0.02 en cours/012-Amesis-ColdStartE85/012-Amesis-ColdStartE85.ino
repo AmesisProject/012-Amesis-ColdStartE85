@@ -34,14 +34,14 @@
  *                        4.4
  * If you use different pins, just change the defines below
  */
-int iatPin = A0 ; //A7 
-int iatValue ;
+int iatPin = A0 ; //A7 Pin de l
+int iatValue ; 
 int jpOption1Pin = 10 ;
 int jpOption1Value ;
 int jpOption2Pin = 12 ;
 int jpOption2Value ;
 int jpValue ;
-const tempo = 100 ;
+int tempo = 100 ;
 
 #define CSPIN 7   // 1 - !INC - pin 7
 #define INCPIN 5  // 2 - U/!D - pin 5
@@ -56,7 +56,7 @@ void setup() {
   pinMode (jpOption2Pin, INPUT_PULLUP) ; //
   
   Serial.begin(115100); 
-  Serial.println("Starting, set to minimum resistance");  
+  Serial.println("Demarrage du système ");  
   led.begin(-1); // Initialisation à 0 Ohms 
   delay(1000);
 }
@@ -75,7 +75,7 @@ void loop() {
   // Pin entré pour sonde IAT ext Et le mapé 
   iatValue = analogRead(iatPin);
 
-    iatValue = map(iatValue, 0, 1023, 0, 100); // Regler les deux dernier chiffre avec la valeur constructeur de la sonde iat min max
+    iatValue = map(iatValue, 0, 1023, -20, 100); // Regler les deux dernier chiffre avec la valeur constructeur de la sonde iat min max
     Serial.print ("La temperature exterieur est de ");
     Serial.print (iatValue);
     Serial.println ("C° ");
