@@ -1,0 +1,33 @@
+Plotted to 'C:\ProgramPerso\GitHub\012-Amesis-ColdStartE85\Hardware\Kicad\Laster\Doublé\012-Amesis-ColdSartE85\Fichier de fabrication\012-Amesis-ColdSartE85-F_Cu.gbr'.
+Plotted to 'C:\ProgramPerso\GitHub\012-Amesis-ColdStartE85\Hardware\Kicad\Laster\Doublé\012-Amesis-ColdSartE85\Fichier de fabrication\012-Amesis-ColdSartE85-B_Cu.gbr'.
+Plotted to 'C:\ProgramPerso\GitHub\012-Amesis-ColdStartE85\Hardware\Kicad\Laster\Doublé\012-Amesis-ColdSartE85\Fichier de fabrication\012-Amesis-ColdSartE85-F_Paste.gbr'.
+Plotted to 'C:\ProgramPerso\GitHub\012-Amesis-ColdStartE85\Hardware\Kicad\Laster\Doublé\012-Amesis-ColdSartE85\Fichier de fabrication\012-Amesis-ColdSartE85-B_Paste.gbr'.
+Plotted to 'C:\ProgramPerso\GitHub\012-Amesis-ColdStartE85\Hardware\Kicad\Laster\Doublé\012-Amesis-ColdSartE85\Fichier de fabrication\012-Amesis-ColdSartE85-F_Silkscreen.gbr'.
+Plotted to 'C:\ProgramPerso\GitHub\012-Amesis-ColdStartE85\Hardware\Kicad\Laster\Doublé\012-Amesis-ColdSartE85\Fichier de fabrication\012-Amesis-ColdSartE85-B_Silkscreen.gbr'.
+Plotted to 'C:\ProgramPerso\GitHub\012-Amesis-ColdStartE85\Hardware\Kicad\Laster\Doublé\012-Amesis-ColdSartE85\Fichier de fabrication\012-Amesis-ColdSartE85-F_Mask.gbr'.
+Plotted to 'C:\ProgramPerso\GitHub\012-Amesis-ColdStartE85\Hardware\Kicad\Laster\Doublé\012-Amesis-ColdSartE85\Fichier de fabrication\012-Amesis-ColdSartE85-B_Mask.gbr'.
+Plotted to 'C:\ProgramPerso\GitHub\012-Amesis-ColdStartE85\Hardware\Kicad\Laster\Doublé\012-Amesis-ColdSartE85\Fichier de fabrication\012-Amesis-ColdSartE85-Edge_Cuts.gbr'.
+Création du fichier Gerber "job" 'C:\ProgramPerso\GitHub\012-Amesis-ColdStartE85\Hardware\Kicad\Laster\Doublé\012-Amesis-ColdSartE85\Fichier de fabrication\012-Amesis-ColdSartE85-job.gbrjob'.
+Plotted to 'C:\ProgramPerso\GitHub\012-Amesis-ColdStartE85\Hardware\Kicad\Laster\Doublé\012-Amesis-ColdSartE85\Fichier de fabrication\012-Amesis-ColdSartE85-F_Cu.gbr'.
+Plotted to 'C:\ProgramPerso\GitHub\012-Amesis-ColdStartE85\Hardware\Kicad\Laster\Doublé\012-Amesis-ColdSartE85\Fichier de fabrication\012-Amesis-ColdSartE85-B_Cu.gbr'.
+Plotted to 'C:\ProgramPerso\GitHub\012-Amesis-ColdStartE85\Hardware\Kicad\Laster\Doublé\012-Amesis-ColdSartE85\Fichier de fabrication\012-Amesis-ColdSartE85-F_Paste.gbr'.
+Plotted to 'C:\ProgramPerso\GitHub\012-Amesis-ColdStartE85\Hardware\Kicad\Laster\Doublé\012-Amesis-ColdSartE85\Fichier de fabrication\012-Amesis-ColdSartE85-B_Paste.gbr'.
+Plotted to 'C:\ProgramPerso\GitHub\012-Amesis-ColdStartE85\Hardware\Kicad\Laster\Doublé\012-Amesis-ColdSartE85\Fichier de fabrication\012-Amesis-ColdSartE85-F_Silkscreen.gbr'.
+Plotted to 'C:\ProgramPerso\GitHub\012-Amesis-ColdStartE85\Hardware\Kicad\Laster\Doublé\012-Amesis-ColdSartE85\Fichier de fabrication\012-Amesis-ColdSartE85-B_Silkscreen.gbr'.
+Plotted to 'C:\ProgramPerso\GitHub\012-Amesis-ColdStartE85\Hardware\Kicad\Laster\Doublé\012-Amesis-ColdSartE85\Fichier de fabrication\012-Amesis-ColdSartE85-F_Mask.gbr'.
+Plotted to 'C:\ProgramPerso\GitHub\012-Amesis-ColdStartE85\Hardware\Kicad\Laster\Doublé\012-Amesis-ColdSartE85\Fichier de fabrication\012-Amesis-ColdSartE85-B_Mask.gbr'.
+Plotted to 'C:\ProgramPerso\GitHub\012-Amesis-ColdStartE85\Hardware\Kicad\Laster\Doublé\012-Amesis-ColdSartE85\Fichier de fabrication\012-Amesis-ColdSartE85-Edge_Cuts.gbr'.
+Création du fichier Gerber "job" 'C:\ProgramPerso\GitHub\012-Amesis-ColdStartE85\Hardware\Kicad\Laster\Doublé\012-Amesis-ColdSartE85\Fichier de fabrication\012-Amesis-ColdSartE85-job.gbrjob'.
+Plotted to 'C:\ProgramPerso\GitHub\012-Amesis-ColdStartE85\Hardware\Kicad\Laster\Doublé\012-Amesis-ColdSartE85\Fichier de fabrication\012-Amesis-ColdSartE85-F_Cu.gbr'.
+Plotted to 'C:\ProgramPerso\GitHub\012-Amesis-ColdStartE85\Hardware\Kicad\Laster\Doublé\012-Amesis-ColdSartE85\Fichier de fabrication\012-Amesis-ColdSartE85-B_Cu.gbr'.
+Plotted to 'C:\ProgramPerso\GitHub\012-Amesis-ColdStartE85\Hardware\Kicad\Laster\Doublé\012-Amesis-ColdSartE85\Fichier de fabrication\012-Amesis-ColdSartE85-F_Paste.gbr'.
+Plotted to 'C:\ProgramPerso\GitHub\012-Amesis-ColdStartE85\Hardware\Kicad\Laster\Doublé\012-Amesis-ColdSartE85\Fichier de fabrication\012-Amesis-ColdSartE85-B_Paste.gbr'.
+Plotted to 'C:\ProgramPerso\GitHub\012-Amesis-ColdStartE85\Hardware\Kicad\Laster\Doublé\012-Amesis-ColdSartE85\Fichier de fabrication\012-Amesis-ColdSartE85-F_Silkscreen.gbr'.
+Plotted to 'C:\ProgramPerso\GitHub\012-Amesis-ColdStartE85\Hardware\Kicad\Laster\Doublé\012-Amesis-ColdSartE85\Fichier de fabrication\012-Amesis-ColdSartE85-B_Silkscreen.gbr'.
+Plotted to 'C:\ProgramPerso\GitHub\012-Amesis-ColdStartE85\Hardware\Kicad\Laster\Doublé\012-Amesis-ColdSartE85\Fichier de fabrication\012-Amesis-ColdSartE85-F_Mask.gbr'.
+Plotted to 'C:\ProgramPerso\GitHub\012-Amesis-ColdStartE85\Hardware\Kicad\Laster\Doublé\012-Amesis-ColdSartE85\Fichier de fabrication\012-Amesis-ColdSartE85-B_Mask.gbr'.
+Plotted to 'C:\ProgramPerso\GitHub\012-Amesis-ColdStartE85\Hardware\Kicad\Laster\Doublé\012-Amesis-ColdSartE85\Fichier de fabrication\012-Amesis-ColdSartE85-Edge_Cuts.gbr'.
+Création du fichier Gerber "job" 'C:\ProgramPerso\GitHub\012-Amesis-ColdStartE85\Hardware\Kicad\Laster\Doublé\012-Amesis-ColdSartE85\Fichier de fabrication\012-Amesis-ColdSartE85-job.gbrjob'.
+Info: Fini.
+Info: Fini.
+Info: Fini.

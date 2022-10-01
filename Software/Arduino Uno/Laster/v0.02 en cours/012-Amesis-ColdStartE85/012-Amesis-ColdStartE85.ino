@@ -34,13 +34,14 @@
  *                        4.4
  * If you use different pins, just change the defines below
  */
-int iatPin = A7 ;
+int iatPin = A0 ; //A7 
 int iatValue ;
-int jpOption1Pin = D10 ;
+int jpOption1Pin = 10 ;
 int jpOption1Value ;
-int jpOption2Pin = D12 ;
+int jpOption2Pin = 12 ;
 int jpOption2Value ;
 int jpValue ;
+const tempo = 100 ;
 
 #define CSPIN 7   // 1 - !INC - pin 7
 #define INCPIN 5  // 2 - U/!D - pin 5
@@ -52,12 +53,12 @@ void setup() {
   iatValue = 0 ;
   jpValue = 0 ;
   pinMode (jpOption1Pin, INPUT_PULLUP) ; //
-  PinMode (jpOption2Pin, INPUT_PULLUP) ; //
+  pinMode (jpOption2Pin, INPUT_PULLUP) ; //
   
   Serial.begin(115100); 
   Serial.println("Starting, set to minimum resistance");  
   led.begin(-1); // Initialisation à 0 Ohms 
-  delay(5000);
+  delay(1000);
 }
 
 void loop() {
@@ -65,20 +66,20 @@ void loop() {
   jpOption1Value = digitalRead(jpOption1Pin) ;
   jpOption2Value = digitalRead(jpOption2Pin) ;
 
-      if (jpOption1Value == LOW & jpOption2Value == LOW) { Serial.println ("Option 3 +++ ");}
- else if (jpOption2Value == LOW ) {Serial.println ("Option 2 ++ ");}
- else if (jpOption1Value == LOW ) {Serial.println ("Option 1 + ")}
- else if (jpOption1Value == HIGH & jpOption2Value == HIGH) {Serial.println ("Option 0 ")}
+      if (jpOption1Value == LOW & jpOption2Value == LOW) { Serial.println ("Option 3 +++ ");} // Option 3 Avec les 2 jumpeurs d'installé entre 1 & 2 et 2 & 3
+ else if (jpOption2Value == LOW ) {Serial.println ("Option 2 ++ ");}                          // Option 2 Avec le jumpeur entre 2 & 3
+ else if (jpOption1Value == LOW ) {Serial.println ("Option 1 + ");}                           // Option 1 Avec le jumper entre 1 & 2
+ else if (jpOption1Value == HIGH & jpOption2Value == HIGH) {Serial.println ("Option 0 ");}    // Option 0 Sans jumper
   
-  delay (1000);
+  delay (tempo);
   // Pin entré pour sonde IAT ext Et le mapé 
   iatValue = analogRead(iatPin);
 
     iatValue = map(iatValue, 0, 1023, 0, 100); // Regler les deux dernier chiffre avec la valeur constructeur de la sonde iat min max
-    SerialPrint ("La temperature exterieur est de ")
-    SerialPrint (iatValue);
-    SerialPrintln ("t° ");
-     delay (1000);
+    Serial.print ("La temperature exterieur est de ");
+    Serial.print (iatValue);
+    Serial.println ("C° ");
+     delay (tempo);
   //Condition si jp alors
   //Condition si Temperature IAT ext. alors
   
@@ -93,7 +94,7 @@ void loop() {
     Serial.print(", new resistance = ");
     Serial.print(led.getK());
     Serial.println("KOhms");
-    delay(5000);
+    delay(tempo);
 
   Serial.println("Using absolute counter changes");  
   counter = 50;
@@ -103,7 +104,7 @@ void loop() {
     Serial.print(", new resistance = ");
     Serial.print(led.getK());
     Serial.println("KOhms");
-    delay(5000);
+    delay(tempo);
 
   Serial.println("Using absolute counter changes");  
   counter = 99;
@@ -113,7 +114,7 @@ void loop() {
     Serial.print(", new resistance = ");
     Serial.print(led.getK());
     Serial.println("KOhms");
-    delay(5000);
+    delay(tempo);
   
 }
 

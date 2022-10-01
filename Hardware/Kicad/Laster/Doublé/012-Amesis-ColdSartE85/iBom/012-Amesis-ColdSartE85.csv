@@ -1,0 +1,12 @@
+"Id";"Référence";"Boîtier";"Quantité";"Désignation";"Fournisseur et réf";
+1;" ";"15x15 KiCad QR Code La Boutique Amesis Project";1;"LOGO";;;
+2;"A1";"Arduino_Nano";1;"Arduino_Nano_v3.x";;;
+3;"J1";"TerminalBlock_bornier-2_P5.08mm";1;"Screw_Terminal_01x02";;;
+4;"Jumpers_Option1";"PinHeader_1x03_P2.54mm_Vertical";1;"Conn_01x03_Male";;;
+5;"G2/G62_OutPut_IAT1,G2/G62_InPut_IAT1";"TerminalBlock_bornier-4_P5.08mm";2;"Conn_01x04_Male";;;
+6;" ";"AmesisProject Logo 15mm";1;"LOGO";;;
+7;"IAT_Interne1";"PinSocket_1x03_P2.54mm_Vertical";1;"R_Potentiometer";;;
+8;"J2";"PinSocket_1x05_P2.54mm_Vertical";1;"Conn_01x05_Female";;;
+9;" ";"AmesisProject Logo 30mm";1;"LOGO";;;
+10;"J3";"PinSocket_1x03_P2.54mm_Vertical";1;"Conn_01x03_Female";;;
+11;" ";"10x10 KiCad QR Code La Boutique Amesis Project";1;"LOGO";;;
