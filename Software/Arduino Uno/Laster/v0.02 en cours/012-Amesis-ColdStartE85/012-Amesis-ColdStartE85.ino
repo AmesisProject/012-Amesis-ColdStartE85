@@ -34,6 +34,13 @@
  *                        4.4
  * If you use different pins, just change the defines below
  */
+int iatPin = A7 ;
+int iatValue ;
+int jpOption1Pin = D10 ;
+int jpOption1Value ;
+int jpOption2Pin = D12 ;
+int jpOption2Value ;
+int jpValue ;
 
 #define CSPIN 7   // 1 - !INC - pin 7
 #define INCPIN 5  // 2 - U/!D - pin 5
@@ -42,6 +49,11 @@
 LapX9C10X led(INCPIN, UDPIN, CSPIN, LAPX9C10X_X9C103); // * LAPX9C10X_X9C102(1k)  * LAPX9C10X_X9C103(10k) * LAPX9C10X_X9C503(50k) * LAPX9C10X_X9C104(100k)
 
 void setup() {
+  iatValue = 0 ;
+  jpValue = 0 ;
+  pinMode (jpOption1Pin, INPUT_PULLUP) ; //
+  PinMode (jpOption2Pin, INPUT_PULLUP) ; //
+  
   Serial.begin(115100); 
   Serial.println("Starting, set to minimum resistance");  
   led.begin(-1); // Initialisation à 0 Ohms 
@@ -49,9 +61,24 @@ void setup() {
 }
 
 void loop() {
-  //TO DO
   // Pin entré pour jumper
+  jpOption1Value = digitalRead(jpOption1Pin) ;
+  jpOption2Value = digitalRead(jpOption2Pin) ;
+
+      if (jpOption1Value == LOW & jpOption2Value == LOW) { Serial.println ("Option 3 +++ ");}
+ else if (jpOption2Value == LOW ) {Serial.println ("Option 2 ++ ");}
+ else if (jpOption1Value == LOW ) {Serial.println ("Option 1 + ")}
+ else if (jpOption1Value == HIGH & jpOption2Value == HIGH) {Serial.println ("Option 0 ")}
+  
+  delay (1000);
   // Pin entré pour sonde IAT ext Et le mapé 
+  iatValue = analogRead(iatPin);
+
+    iatValue = map(iatValue, 0, 1023, 0, 100); // Regler les deux dernier chiffre avec la valeur constructeur de la sonde iat min max
+    SerialPrint ("La temperature exterieur est de ")
+    SerialPrint (iatValue);
+    SerialPrintln ("t° ");
+     delay (1000);
   //Condition si jp alors
   //Condition si Temperature IAT ext. alors
   
