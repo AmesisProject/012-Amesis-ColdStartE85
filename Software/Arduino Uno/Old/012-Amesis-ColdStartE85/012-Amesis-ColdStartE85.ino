@@ -4,9 +4,9 @@
 // Amesis Project
 // 29/09/2022
 // Projet : 
-// Version : v0.02
+// Version : v0.01
 
-#include "LapX9C10X.h"
+#include <LapX9C10X.h>
 
 /* This example assumes you're using an X9C103 (10k) chip. For other variants,
  * Change the value in the line : LapX9C10X led(INCPIN, UDPIN, CSPIN, LAPX9C10X_X9C103);
@@ -34,167 +34,55 @@
  *                        4.4
  * If you use different pins, just change the defines below
  */
-int airTempPin = A0 ;  //A7 Pin de la sonde de temperature d'air 
-int airTempValue ;     //Variable pour la valeur de la temperature 
-int jpOption1Pin = 10 ;//10 Pin pour le jumpeur 1
-int jpOption1Value ;   //Variable boleene pour le Jumpeur 1
-int jpOption2Pin = 12 ;//12 Pin pour le jumper 2
-int jpOption2Value ;   //Variable boleen pour le Jumpeur 2 
-int optionValue ;      //Option engagée pour l'execution du programme 1 2 3 4 
-int tempo = 100 ;      // delais de stabilité système
-float coef1 = 0 ;    // Coefficien multiplicateur suivant les options choisis 0%
-float coef2 = 10 ;    // Coefficien multiplicateur suivant les options choisis 10% en +
-float coef3 = 20 ;    // Coefficien multiplicateur suivant les options choisis 20% en +
-float coef4 = 30 ;    // Coefficien multiplicateur suivant les options choisis 30% en +
-float coef ;            // Coefficien choisis 
 
-//Pins de comunication entre l'arduino et le module LAPX9C103
 #define CSPIN 7   // 1 - !INC - pin 7
 #define INCPIN 5  // 2 - U/!D - pin 5
 #define UDPIN 6   // 7 - !CS  - pin 6
 
 LapX9C10X led(INCPIN, UDPIN, CSPIN, LAPX9C10X_X9C103); // * LAPX9C10X_X9C102(1k)  * LAPX9C10X_X9C103(10k) * LAPX9C10X_X9C503(50k) * LAPX9C10X_X9C104(100k)
 
-//Fonction pour les valeur en degré C°
-int Vo;
-float R1 = 10000;
-float logR2, R2, T;
-float c1 = 1.009249522e-03, c2 = 2.378405444e-04, c3 = 2.019202697e-07;
-
 void setup() {
-  airTempValue = 0 ;// Initialisation
-  optionValue = 0 ; // Initialisation
-
-  pinMode (jpOption1Pin, INPUT_PULLUP) ; //Declaration de entré Jumpeur un PullUp
-  pinMode (jpOption2Pin, INPUT_PULLUP) ; //Declaration de entré Jumpeur un PullUp
-  
-  Serial.begin(115100);  // Initialisation de la liaison serie 
-  Serial.println("Demarrage du système ");  
-  led.begin(-1); // Initialisation à 0 Ohms du modul LAPX9C103
-  delay(50);
+  Serial.begin(115100); 
+  Serial.println("Starting, set to minimum resistance");  
+  led.begin(-1); // Initialisation à 0 Ohms 
+  delay(5000);
 }
 
 void loop() {
-//Sonde airTemp ext 
-//degre();
-airTempValue = analogRead(airTempPin); //airTempValue enregistre la valeur du Pin
-airTempValue = map(airTempValue, 0, 1023, -48, 125); // Regler les deux dernier chiffre avec la valeur constructeur de la sonde airTemp min max
-
-  Serial.print ("La temperature exterieur est de ");
-  Serial.print (airTempValue); //Affiche sur le port serie la valeur de la variable
-  Serial.println ("C° ");
-
-  // Pin entré pour jumper
-  jpOption1Value = digitalRead(jpOption1Pin) ;
-  jpOption2Value = digitalRead(jpOption2Pin) ;
-
-  if (jpOption1Value == LOW & jpOption2Value == LOW) {// Option 4 Avec les 2 jumpeurs d'installé entre 1 & 2 et 2 & 3
-     Serial.println ("Option 4 +++ ");
-     optionValue = 4 ;
-     coef = coef4 ;
-       } 
-
- else if (jpOption2Value == LOW ) {// Option 3 Avec le jumpeur entre 2 & 3
-        Serial.println ("Option 3 ++ ");
-        optionValue = 3 ;
-        coef = coef3 ;
-       }        
-                          
- else if (jpOption1Value == LOW ) {
-        Serial.println ("Option 2 + ");// Option 1 Avec le jumper entre 1 & 2
-        optionValue = 2 ;
-        coef = coef2 ;
-       }
-
- else if (jpOption1Value == HIGH & jpOption2Value == HIGH) {
-        Serial.println ("Option 1 ");
-        optionValue = 1 ; // Option 0 Sans jumper
-        coef = coef1 ;
-       }  
-
-  if (optionValue == 1 ) {
   int counter;      // Le int sert pour le microcontroleur du modul LAPX9C10X_X9C103
   float resistance; // Le float sert pour le microcontroleur du modul LAPX9C10X_X9C103
   
   Serial.println("Using absolute counter changes");  
-  counter = 0 ;     //On ecrit la valeur du counter de 0 à 99 Mapé 0 Ohms à 10K Ohms(Voire tableau de correspondance en bas de code)
+  counter = 0;     //On ecrit la valeur du counter de 0 à 99 Mapé 0 Ohms à 10K Ohms(Voire tableau de correspondance en bas de code)
     Serial.print("Increasing, counter = ");
     Serial.print(counter);
     led.set(counter);
     Serial.print(", new resistance = ");
     Serial.print(led.getK());
     Serial.println("KOhms");
-    delay(tempo);
-  }
+    delay(5000);
 
-  else if (optionValue  == 2){
-  int counter;      // Le int sert pour le microcontroleur du modul LAPX9C10X_X9C103
-  float resistance; // Le float sert pour le microcontroleur du modul LAPX9C10X_X9C103
   Serial.println("Using absolute counter changes");  
-      if (airTempValue >= 30 ) { counter = 0 ; }
- else if (airTempValue >= 20 && airTempValue < 30) { counter = 9 ; }
- else if (airTempValue >= 10 && airTempValue < 20) { counter = 19 ; }
- else if (airTempValue >=  0 && airTempValue < 10) { counter = 29 ; }
- else if (airTempValue <  0)                       { counter = 39 ; }
+  counter = 50;
     Serial.print("Increasing, counter = ");
     Serial.print(counter);
     led.set(counter);
     Serial.print(", new resistance = ");
     Serial.print(led.getK());
     Serial.println("KOhms");
-    delay(tempo);
-  }
- else if (optionValue  == 3){
-  int counter;      // Le int sert pour le microcontroleur du modul LAPX9C10X_X9C103
-  float resistance; // Le float sert pour le microcontroleur du modul LAPX9C10X_X9C103
+    delay(5000);
+
   Serial.println("Using absolute counter changes");  
-      if (airTempValue >= 30 ) { counter = 0 ; }
- else if (airTempValue >= 20 && airTempValue < 30) { counter = 39 ; }
- else if (airTempValue >= 10 && airTempValue < 20) { counter = 49 ; }
- else if (airTempValue >=  0 && airTempValue < 10) { counter = 59 ; }
- else if (airTempValue < 0)                         { counter = 69 ; }
+  counter = 99;
     Serial.print("Increasing, counter = ");
     Serial.print(counter);
     led.set(counter);
     Serial.print(", new resistance = ");
     Serial.print(led.getK());
     Serial.println("KOhms");
-    delay(tempo);
-  }
- 
-  else if (optionValue  == 4){
-  int counter;      // Le int sert pour le microcontroleur du modul LAPX9C10X_X9C103
-  float resistance; // Le float sert pour le microcontroleur du modul LAPX9C10X_X9C103
-  Serial.println("Using absolute counter changes");  
-      if (airTempValue >= 30 ) { counter = 0 ; }
- else if (airTempValue >= 20 && airTempValue < 30) { counter = 69 ; }
- else if (airTempValue >= 10 && airTempValue < 20) { counter = 79 ; }
- else if (airTempValue >=  0 && airTempValue < 10) { counter = 89 ; }
- else if (airTempValue < 0)                        { counter = 99 ; }
-    Serial.print("Increasing, counter = ");
-    Serial.print(counter);
-    led.set(counter);
-    Serial.print(", new resistance = ");
-    Serial.print(led.getK());
-    Serial.println("KOhms");
-    delay(tempo);
-  }
+    delay(5000);
+  
 }
-
-void degre (){
-
-  Vo = analogRead(airTempPin);
-  R2 = R1 * (1023.0 / (float)Vo - 1.0);
-  logR2 = log(R2);
-  airTempValue = (1.0 / (c1 + c2*logR2 + c3*logR2*logR2*logR2));
-  airTempValue = airTempValue - 273.15;
- // airTempValue = (airTempValue * 9.0)/ 5.0 + 32.0; 
-  delay(10);
-
-  return(airTempValue);
-}
-
-
 
 /** Tableau de correspondance :
 01:14:21.757 -> Starting, set to minimum resistance
