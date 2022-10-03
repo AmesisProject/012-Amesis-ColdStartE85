@@ -34,15 +34,16 @@
  *                        4.4
  * If you use different pins, just change the defines below
  */
-int iatPin = A0 ; //A7 Pin de l
-int iatValue ; 
-int jpOption1Pin = 10 ;
-int jpOption1Value ;
-int jpOption2Pin = 12 ;
-int jpOption2Value ;
-int jpValue ;
-int tempo = 100 ;
+int airTempPin = A0 ;  //A7 Pin de la sonde de temperature d'air 
+int airTempValue ;     //Variable pour la valeur de la temperature 
+int jpOption1Pin = 10 ;//10 Pin pour le jumpeur 1
+int jpOption1Value ;   //Variable boleene pour le Jumpeur 1
+int jpOption2Pin = 12 ;//12 Pin pour le jumper 2
+int jpOption2Value ;   //Variable boleen pour le Jumpeur 2 
+int optionValue ;      //Option engagée pour l'execution du programme 1 2 3 4 
+int tempo = 100 ;      // delais de stabilité système
 
+//Pins de comunication entre l'arduino et le module LAPX9C103
 #define CSPIN 7   // 1 - !INC - pin 7
 #define INCPIN 5  // 2 - U/!D - pin 5
 #define UDPIN 6   // 7 - !CS  - pin 6
@@ -50,38 +51,45 @@ int tempo = 100 ;
 LapX9C10X led(INCPIN, UDPIN, CSPIN, LAPX9C10X_X9C103); // * LAPX9C10X_X9C102(1k)  * LAPX9C10X_X9C103(10k) * LAPX9C10X_X9C503(50k) * LAPX9C10X_X9C104(100k)
 
 void setup() {
-  iatValue = 0 ;
-  jpValue = 0 ;
-  pinMode (jpOption1Pin, INPUT_PULLUP) ; //
+  airTempValue = 0 ;// Initialisation 
+  optionValue = 0 ; // Initialisation
+  pinMode (jpOption1Pin, INPUT_PULLUP) ; //Declaration de entré Jumpeur un PullUp
   pinMode (jpOption2Pin, INPUT_PULLUP) ; //
   
-  Serial.begin(115100); 
+  Serial.begin(115100);  // Initialisation de la liaison serie 
   Serial.println("Demarrage du système ");  
-  led.begin(-1); // Initialisation à 0 Ohms 
-  delay(1000);
+  led.begin(-1); // Initialisation à 0 Ohms du modul LAPX9C103
+  delay(500);
 }
 
 void loop() {
+//Sonde airTemp ext 
+  airTempValue = analogRead(airTempPin); //airTempValue enregistre la valeur du Pin
+  airTempValue = map(airTempValue, 0, 1023, -55, 125); // Regler les deux dernier chiffre avec la valeur constructeur de la sonde airTemp min max
+  Serial.print ("La temperature exterieur est de ");
+  Serial.print (airTempValue); //Affiche sur le port serie la valeur de la variable
+  Serial.println ("C° ");
+
   // Pin entré pour jumper
   jpOption1Value = digitalRead(jpOption1Pin) ;
   jpOption2Value = digitalRead(jpOption2Pin) ;
 
-      if (jpOption1Value == LOW & jpOption2Value == LOW) { Serial.println ("Option 3 +++ ");} // Option 3 Avec les 2 jumpeurs d'installé entre 1 & 2 et 2 & 3
- else if (jpOption2Value == LOW ) {Serial.println ("Option 2 ++ ");}                          // Option 2 Avec le jumpeur entre 2 & 3
- else if (jpOption1Value == LOW ) {Serial.println ("Option 1 + ");}                           // Option 1 Avec le jumper entre 1 & 2
- else if (jpOption1Value == HIGH & jpOption2Value == HIGH) {Serial.println ("Option 0 ");}    // Option 0 Sans jumper
+      if (jpOption1Value == LOW & jpOption2Value == LOW) {// Option 4 Avec les 2 jumpeurs d'installé entre 1 & 2 et 2 & 3
+         Serial.println ("Option 4 +++ ");
+         optionValue = 4 ;
+         } 
+ else if (jpOption2Value == LOW ) {
+  Serial.println ("Option 3 ++ ");
+  optionValue = 3 ;
+        }                          // Option 3 Avec le jumpeur entre 2 & 3
+ else if (jpOption1Value == LOW ) {Serial.println ("Option 2 + ");optionValue = 2 ;}                           // Option 1 Avec le jumper entre 1 & 2
+ else if (jpOption1Value == HIGH & jpOption2Value == HIGH) {Serial.println ("Option 1 ");optionValue = 1 ;}    // Option 0 Sans jumper
   
   delay (tempo);
-  // Pin entré pour sonde IAT ext Et le mapé 
-  iatValue = analogRead(iatPin);
-
-    iatValue = map(iatValue, 0, 1023, -20, 100); // Regler les deux dernier chiffre avec la valeur constructeur de la sonde iat min max
-    Serial.print ("La temperature exterieur est de ");
-    Serial.print (iatValue);
-    Serial.println ("C° ");
+  
      delay (tempo);
   //Condition si jp alors
-  //Condition si Temperature IAT ext. alors
+  //Condition si Temperature airTemp ext. alors
   
   int counter;      // Le int sert pour le microcontroleur du modul LAPX9C10X_X9C103
   float resistance; // Le float sert pour le microcontroleur du modul LAPX9C10X_X9C103
