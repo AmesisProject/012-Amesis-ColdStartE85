@@ -49,6 +49,8 @@ float coef3 = 20 ;     // Coefficien multiplicateur suivant les options choisis 
 float coef4 = 30 ;     // Coefficien multiplicateur suivant les options choisis 30% en +
 float coef ;           // Coefficien choisis 
 
+unsigned long previousMillis = 0; 
+const long interval = 1000;  
 
 //Pins de comunication entre l'arduino et le module LAPX9C103
 #define CSPIN 7   // 1 - !INC - pin 7
@@ -77,6 +79,8 @@ void setup(){
 }
 
 void loop(){
+unsigned long currentMillis = millis();
+
 
  if (millis < coldStart){
  option();
@@ -183,7 +187,7 @@ airTempValue = map(airTempValue, 0, 1023, -48, 125); // Regler les deux dernier 
  else if (airTempValue >= 20 && airTempValue < 30) { counter = 39 ; }
  else if (airTempValue >= 10 && airTempValue < 20) { counter = 49 ; }
  else if (airTempValue >=  0 && airTempValue < 10) { counter = 59 ; }
- else if (airTempValue < 0)                         { counter = 69 ; }
+ else if (airTempValue < 0)                        { counter = 69 ; }
     Serial.print("Increasing, counter = ");
     Serial.print(counter);
     led.set(counter);
