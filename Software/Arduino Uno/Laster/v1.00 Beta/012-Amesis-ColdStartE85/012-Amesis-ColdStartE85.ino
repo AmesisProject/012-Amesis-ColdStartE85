@@ -1,70 +1,57 @@
-//   ^ ^
-// =( °°)=
-// (")_(") 
+//    ^ ^
+//  =( '')=
+//  ( ")_( ") 
 // Amesis Project
-// 29/09/2022
-// Projet : 
-// Version : v0.03
+// 09/10/2022
+// Projet : Amesis-ColdStartE85
+// Version : v1.00 Beta
+// Description : Ce programme a pour but de hacker une sonde de temperature de liquide de refroidissement pour que les véhicule passer a l'e85 demmarre correctement
+//               Nos 1er tests seront réaliser sur une VW Golf IV 1.6L 16v.
+//               Le but est de leurer le calculateur en lui faisant croie que la temperature de liquide de refroidissement est extremement froide ce qui change les valeurs
+//               choisis dans les cartographie d'injection et d'allumage. 
+//               Le code utilise une sonde de temperature pour adapter les valeurs en fonction de la temperature de LR et lisse progressivement le leure.
+//  Option 1 : Pas de Jumpers d'installés : Le systeme fait comme si tout été d'orige, aucune resistance de ragoutée
+//  Option 2 : Un Jumpeur entre 1 & 2 : ajout d'une resistance faible en plus de la sonde de LR d'origne               
+//  Option 3 : Un Jumpeur entre 2 & 3 : ajout d'une resistance mayenne en plus de la sonde de LR d'origine
+//  Option 4 : Les deux jumpeurs 1 & 2 & 3 : les valeur maximum sont ajouté en + de la sonde de temparature d'orige.
+// Avertissement : Ce système et aucunnement omologué pour une utilisation sur voix public. Il modiffie les données constructeur et 
+//                 ceci peut créer un deffaut moteur de temperature valeur de sonde dépassé et autre DTC. Voir la destruction du moteur. Comme ça vous êtes prevenue.
+//                 Les valeurs de resistance peuvent être ajuster dans la fonction "void outPutResistanceLap()" dnas le Mapage. Le tebleau de correspondance est affiché en fin de code.  
 
-#include "LapX9C10X.h"
+#include "LapX9C10X.h" //Librairie 
 
-/* This example assumes you're using an X9C103 (10k) chip. For other variants,
- * Change the value in the line : LapX9C10X led(INCPIN, UDPIN, CSPIN, LAPX9C10X_X9C103);
+int airTempPin = A0 ;            // A7 Pin de la sonde de temperature d'air 
+int airTempValue ;               // Variable pour la valeur de la temperature 
+int ATMin = -48 ;                // Calibration de la sonde de temperature valeur mini
+int ATMax = 125 ;                // Calibration de la sonde de temperature valeur Maxi
+int DTC_AT ;                     // Deffaut de la sonde de temperature
+int jpOption1Pin = 10 ;          // 10 Pin pour le jumpeur 1
+int jpOption1Value ;             // Variable boleene pour le Jumpeur 1
+int jpOption2Pin = 12 ;          // 12 Pin pour le jumper 2
+int jpOption2Value ;             // Variable boleen pour le Jumpeur 2 
+int optionValue ;                // Option engagée pour l'execution du programme 1 2 3 4 
+int tempo = 1000 ;               // delais d'une boucle système
+int AT_Seuil = 30 ;              // Cette variable est le seuil au dessus dequel le LAP passe a 0 ohms
+unsigned long coldStart = 60000 ;// Temps du ColdStart avant de basculer un valeur d'origine en ms
 
- * The chip is connected to the Arduino like this:
- * (! indicates that the thing following has a line over the top, called a bar.)
- *   
- * The other pins on the chip must be wired like this:
- * 8 - VCC - 5/3.3V
- * 3 - VH  - 5/3.3V
- * 4 - VSS - GND
- * 6 - VL  - GND
- * 5 - VW  - Output: 680 Ohm resistor to an LED, the other terminal
- *           of the LED connected to GND This value may seem high,
- *           but the maximum steady state wiper current of the chip
- *           is 4.4mA (8.8mA peak for 10 seconds). 680 Ohms - assuming
- *           a 5V supply, and an LED forward voltage drop of 2V, gives 
- *           us almost dead on 4.4mA worst case current (when the wiper
- *           is at the top).
- *           If you want to get the brightest you can, use this formula
- *           for the resistor value (in kilohms), where VCC is the 
- *           supply voltage, and VLED is the LED forward voltage drop:
- *                R = (VCC - VLED) 
- *                    ------------
- *                        4.4
- * If you use different pins, just change the defines below
- */
-int airTempPin = A0 ;  //A7 Pin de la sonde de temperature d'air 
-int airTempValue ;     //Variable pour la valeur de la temperature 
-int ATMin = -48 ;      //Calibration de la sonde de temperature valeur mini
-int ATMax = 125 ;      //Calibration de la sonde de temperature valeur Maxi
-int DTC_AT ;           //Deffaut de la sonde de temperature
-int jpOption1Pin = 10 ;//10 Pin pour le jumpeur 1
-int jpOption1Value ;   //Variable boleene pour le Jumpeur 1
-int jpOption2Pin = 12 ;//12 Pin pour le jumper 2
-int jpOption2Value ;   //Variable boleen pour le Jumpeur 2 
-int optionValue ;      //Option engagée pour l'execution du programme 1 2 3 4 
-int tempo = 1000 ;     // delais d'une boucle système
-long coldStart = 60000 ;// Temps du ColdStard avant de basculer un valeur d'origine
-float coef1 = 0 ;      // Coefficien multiplicateur suivant les options choisis 0%
-float coef2 = 10 ;     // Coefficien multiplicateur suivant les options choisis 10% en +
-float coef3 = 20 ;     // Coefficien multiplicateur suivant les options choisis 20% en +
-float coef4 = 30 ;     // Coefficien multiplicateur suivant les options choisis 30% en +
-float coef ;           // Coefficien choisis 
-
-
+//Pour ce programme le module potentiometre numerique LAPX9C103 10Kohms à été choisis (Pour les autres variantes,Changez la valeur dans la ligne : LapX9C10X led(INCPIN, UDPIN, CSPIN, LAPX9C10X_X9C103);) 
 //Pins de comunication entre l'arduino et le module LAPX9C103
 #define CSPIN 7   // 1 - !INC - pin 7
 #define INCPIN 5  // 2 - U/!D - pin 5
 #define UDPIN 6   // 7 - !CS  - pin 6
 LapX9C10X led(INCPIN, UDPIN, CSPIN, LAPX9C10X_X9C103); // * LAPX9C10X_X9C102(1k)  * LAPX9C10X_X9C103(10k) * LAPX9C10X_X9C503(50k) * LAPX9C10X_X9C104(100k)
+int counter; //variable pour envoyer la commande au modul LAP
+float resistance; //variable qui retourne l'info de la resistance choisis venant du LAP
 
+//TO DO 
+//Ces variable sont lier a le fonction void degre() qui semble très interresente pouir le calibrage des sonde AirTemperature Mais pas utilisé dans cette V1.00 Beta
 //Fonction pour les valeur en degré C° pour la fonction "void degre()"
 int Vo;
 float R1 = 10000;
 float logR2, R2, T;
 float c1 = 1.009249522e-03, c2 = 2.378405444e-04, c3 = 2.019202697e-07;
 
+//Initialisation du programme
 void setup(){
   airTempValue = 0 ;// Initialisation
   optionValue = 0 ; // Initialisation
@@ -78,24 +65,40 @@ void setup(){
   delay(50);
 }
 
+//Demmarage du programme
 void loop(){
 
-unsigned long currentMillis = millis();
+ unsigned long currentMillis = millis(); // Enregistrement de la date pour le temps du coldStart non bloquante
 
-
-option(); // Appel a la fonction option
+ option(); // Appel a la fonction option -- Il y a 4 options dans ce programme suivant le positionnement des jumpers sur le HW / L'option 1 ne fais rien elle lesse la continuité du fils pour avoir 0 ohms
   Serial.println ("");
   Serial.print ("Option ");
   Serial.print (optionValue);
   Serial.println (" activée ");
 
-DTC(); //Appel a la fonction DTC
-
-
- if (currentMillis < coldStart){
+ DTC(); //Appel a la fonction DTC
+   if (DTC_AT == 1) { //Si il y a un deffaut
+        Serial.println ("ColdStart DTC MODE = ON"); 
+        counter = 99 ; 
+        for (int i=0; i<99; i++) { // Incrementation de 99 car le LAP a une plage de 0 à 99
+              counter = counter - 1 ; // on enlève 1 a counter pour rappel counter 99 = 100K ohms 0 = 0 ohm (voire tableau en fin de code)
+              Serial.print ("Le counter = ") ;
+              Serial.println (counter) ;
+              led.set(counter);
+              delay (coldStart/60) ; // delay pour la boucle for en fonction du delay du coldStart choisi dans la declaration des variables
+             }
+        for (int j=0; j<1;){ // boucle for pour verouiller la boucle et ne plus en sortir.
+              Serial.println ("ColdStart DTC MODE = OVER");
+              counter = 0 ;  
+              led.set(counter);
+              delay (1000);
+        }
+        
+ }
+ else if (currentMillis < coldStart){
   Serial.println ("ColdStart = ON");
 
- outPutResistanceLap();
+ outPutResistanceLap(); // Appel de la fonction 
   Serial.print ("une résistance de sortie de Lap est de ");
   Serial.print (led.getK());
   Serial.println (" Khoms");
@@ -111,7 +114,7 @@ DTC(); //Appel a la fonction DTC
     Serial.println ("Khoms");
   }
   Serial.print ("Il s'est écoulé ");
-  Serial.print (currentMillis / 1000);
+  Serial.print (currentMillis / 1000); 
   Serial.println ("s depuis le contacte mis");
   Serial.println ("_____________________________________________________");
   delay(tempo);
@@ -126,55 +129,54 @@ void option(){
   if (jpOption1Value == LOW & jpOption2Value == LOW) {// Option 4 Avec les 2 jumpeurs d'installé entre 1 & 2 et 2 & 3
      //Serial.println ("Option 4 +++ ");
      optionValue = 4 ;
-     coef = coef4 ;
        } 
 
  else if (jpOption2Value == LOW ) {// Option 3 Avec le jumpeur entre 2 & 3
        // Serial.println ("Option 3 ++ ");
         optionValue = 3 ;
-        coef = coef3 ;
        }        
                           
  else if (jpOption1Value == LOW ) {
         //Serial.println ("Option 2 + ");// Option 1 Avec le jumper entre 1 & 2
         optionValue = 2 ;
-        coef = coef2 ;
        }
 
  else if (jpOption1Value == HIGH & jpOption2Value == HIGH) {
         //Serial.println ("Option 1 ");
         optionValue = 1 ; // Option 0 Sans jumper
-        coef = coef1 ;
 
        }  
        return (optionValue);
 }
 
 void outPutResistanceLap(){
-//Sonde airTemp ext 
-//degre();
-airTempValue = analogRead(airTempPin); //airTempValue enregistre la valeur du Pin
-airTempValue = map(airTempValue, 0, 1023, ATMin, ATMax); // Regler les deux dernier chiffre avec la valeur constructeur de la sonde airTemp min max pour ATMin ATMax dans la declaration des variable
+ //Sonde airTemp ext 
+ //degre();
+ airTempValue = analogRead(airTempPin); //airTempValue enregistre la valeur du Pin
+ airTempValue = map(airTempValue, 0, 1023, ATMin, ATMax); // Regler les deux dernier chiffre avec la valeur constructeur de la sonde airTemp min max pour ATMin ATMax dans la declaration des variable
 
   Serial.print ("La temperature exterieur est de ");
   Serial.print (airTempValue); //Affiche sur le port serie la valeur de la variable
   Serial.println ("C° ");
   
-  int counter;      // Le int sert pour le microcontroleur du modul LAPX9C10X_X9C103
-  float resistance; // Le float sert pour le microcontroleur du modul LAPX9C10X_X9C103
-         if (optionValue  == 4){ //Si Option 4 est enclanchée
-               if (airTempValue > 0 ) { counter = map(airTempValue, 0, 30, 99, 69);} //on mets le counter mapé avec les valeurs entre ()
-          else if (airTempValue <= 0) { counter = 99 ; }                             //sinon on met au mac de l'option 4
+  //int counter;      // Le int sert pour le microcontroleur du modul LAPX9C10X_X9C103
+  //float resistance; // Le float sert pour le microcontroleur du modul LAPX9C10X_X9C103
+         if (optionValue  == 4){ //Si Option 4 est enclanchée 
+               if (airTempValue <= 0) { counter = 99 ; }   //sinon on met au max de l'option 4    
+          else if (airTempValue > 0 && airTempValue < AT_Seuil) {counter = map(airTempValue, ATMin, ATMax, 99, 69);} //on mets le counter mapé avec les valeurs entre ()
+          else if (airTempValue >= AT_Seuil) { counter = 0  ; }   //Sinon on met le LAP à 0 ohms   Cette ligne peut être commenté pour ne pas limité 
            }
 
-    else if (optionValue  == 3){ //Si Option 3 est enclanchée
-               if (airTempValue > 0 ) {counter = map(airTempValue, 0, 30, 69, 39);} //on mets le counter mapé avec les valeurs entre ()
-          else if (airTempValue <= 0) { counter = 69 ; }                            //sinon on met au mac de l'option 3
+    else if (optionValue  == 3){ //Si Option 3 est enclanchée 
+               if (airTempValue <= 0) { counter = 69 ; }          //sinon on met au mac de l'option 3 
+          else if (airTempValue > 0 && airTempValue < AT_Seuil) {counter = map(airTempValue, ATMin, ATMax, 69, 39);} //on mets le counter mapé avec les valeurs entre ()
+          else if (airTempValue >= AT_Seuil) { counter = 0  ; }   //Sinon on met le LAP à 0 ohms   Cette ligne peut être commenté pour ne pas limité   
           } 
 
     else if (optionValue  == 2){ //Si Option 2 est enclanchée
-                if (airTempValue > 0 ) {counter = map(airTempValue, 0, 30, 39, 9);} //on mets le counter mapé avec les valeurs entre ()
-           else if (airTempValue <= 0) { counter = 39 ; }                           //sinon on met au mac de l'option 2
+               if (airTempValue <= 0) { counter = 39 ; }         //sinon on met au mac de l'option 2 
+          else if (airTempValue > 0 && airTempValue < AT_Seuil) {counter = map(airTempValue, ATMin, ATMax, 39, 9);} //on mets le counter mapé avec les valeurs entre ()
+          else if (airTempValue >= AT_Seuil) { counter = 0  ; }   //Sinon on met le LAP à 0 ohms   Cette ligne peut être commenté pour ne pas limité   
           }
 
     else if (optionValue  == 1) {counter = 0 ;} //Si Option 1 est enclanchée on mets le counter a 0 ce qui équivau a une resistance du Lap de 0 ohms
@@ -186,7 +188,7 @@ airTempValue = map(airTempValue, 0, 1023, ATMin, ATMax); // Regler les deux dern
   return (led.getK());
 }
 
-void degre (){
+void degre (){// Cette fonction n'est pas exploitée pour le moment 
 
   Vo = analogRead(airTempPin);
   R2 = R1 * (1023.0 / (float)Vo - 1.0);
@@ -205,10 +207,10 @@ void DTC(){
   else if (airTempValue == ATMax) {DTC_AT = 1 ;} //Si la valeur max à été ateinte alor deffaut 
   else {DTC_AT = 0 ;}                            //Sinon pas de deffaut
 
-Serial.print ("DTC = ");
-Serial.println (DTC_AT);
+  Serial.print ("DTC = ");
+  Serial.println (DTC_AT);
 
-return (DTC_AT);
+ return (DTC_AT);
 }
 
 /** Tableau de correspondance :
