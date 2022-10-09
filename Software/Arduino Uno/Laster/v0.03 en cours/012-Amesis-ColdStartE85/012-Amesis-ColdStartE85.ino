@@ -45,7 +45,7 @@ int jpOption2Pin = 12 ;//12 Pin pour le jumper 2
 int jpOption2Value ;   //Variable boleen pour le Jumpeur 2 
 int optionValue ;      //Option engagée pour l'execution du programme 1 2 3 4 
 int tempo = 1000 ;     // delais d'une boucle système
-int coldStart = 5000 ;// Temps du ColdStard avant de basculer un valeur d'origine
+long coldStart = 60000 ;// Temps du ColdStard avant de basculer un valeur d'origine
 float coef1 = 0 ;      // Coefficien multiplicateur suivant les options choisis 0%
 float coef2 = 10 ;     // Coefficien multiplicateur suivant les options choisis 10% en +
 float coef3 = 20 ;     // Coefficien multiplicateur suivant les options choisis 20% en +
