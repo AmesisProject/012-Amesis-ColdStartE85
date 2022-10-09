@@ -36,30 +36,30 @@
  */
 int airTempPin = A0 ;  //A7 Pin de la sonde de temperature d'air 
 int airTempValue ;     //Variable pour la valeur de la temperature 
+int ATMin = -48 ;      //Calibration de la sonde de temperature valeur mini
+int ATMax = 125 ;      //Calibration de la sonde de temperature valeur Maxi
+int DTC_AT ;           //Deffaut de la sonde de temperature
 int jpOption1Pin = 10 ;//10 Pin pour le jumpeur 1
 int jpOption1Value ;   //Variable boleene pour le Jumpeur 1
 int jpOption2Pin = 12 ;//12 Pin pour le jumper 2
 int jpOption2Value ;   //Variable boleen pour le Jumpeur 2 
 int optionValue ;      //Option engagée pour l'execution du programme 1 2 3 4 
-int tempo = 100 ;      // delais de stabilité système
-int coldStart = 1000 ; // Temps du ColdStard avant de basculer un valeur d'origine
+int tempo = 1000 ;     // delais d'une boucle système
+int coldStart = 5000 ;// Temps du ColdStard avant de basculer un valeur d'origine
 float coef1 = 0 ;      // Coefficien multiplicateur suivant les options choisis 0%
 float coef2 = 10 ;     // Coefficien multiplicateur suivant les options choisis 10% en +
 float coef3 = 20 ;     // Coefficien multiplicateur suivant les options choisis 20% en +
 float coef4 = 30 ;     // Coefficien multiplicateur suivant les options choisis 30% en +
 float coef ;           // Coefficien choisis 
 
-unsigned long previousMillis = 0; 
-const long interval = 1000;  
 
 //Pins de comunication entre l'arduino et le module LAPX9C103
 #define CSPIN 7   // 1 - !INC - pin 7
 #define INCPIN 5  // 2 - U/!D - pin 5
 #define UDPIN 6   // 7 - !CS  - pin 6
-
 LapX9C10X led(INCPIN, UDPIN, CSPIN, LAPX9C10X_X9C103); // * LAPX9C10X_X9C102(1k)  * LAPX9C10X_X9C103(10k) * LAPX9C10X_X9C503(50k) * LAPX9C10X_X9C104(100k)
 
-//Fonction pour les valeur en degré C°
+//Fonction pour les valeur en degré C° pour la fonction "void degre()"
 int Vo;
 float R1 = 10000;
 float logR2, R2, T;
@@ -79,29 +79,42 @@ void setup(){
 }
 
 void loop(){
+
 unsigned long currentMillis = millis();
 
 
- if (millis < coldStart){
- option();
+option(); // Appel a la fonction option
+  Serial.println ("");
   Serial.print ("Option ");
   Serial.print (optionValue);
   Serial.println (" activée ");
 
+DTC(); //Appel a la fonction DTC
+
+
+ if (currentMillis < coldStart){
+  Serial.println ("ColdStart = ON");
+
  outPutResistanceLap();
-  Serial.print ("La résistance de sortie de Lap est de ")
+  Serial.print ("une résistance de sortie de Lap est de ");
   Serial.print (led.getK());
   Serial.println (" Khoms");
  }
   else {
+    Serial.println ("ColdStart = OFF");
   int counter;      // Le int sert pour le microcontroleur du modul LAPX9C10X_X9C103
   float resistance; // Le float sert pour le microcontroleur du modul LAPX9C10X_X9C103
   counter = 0 ;     //On ecrit la valeur du counter de 0 à 99 Mapé 0 Ohms à 10K Ohms(Voire tableau de correspondance en bas de code)
     led.set(counter);
-    Serial.print ("Le programme ce deroul sans ajour, la resistance du Lap est de ")
+    Serial.print ("Le programme ce deroule sans ajout, la resistance du Lap de ");
     Serial.print (led.getK());
     Serial.println ("Khoms");
   }
+  Serial.print ("Il s'est écoulé ");
+  Serial.print (currentMillis / 1000);
+  Serial.println ("s depuis le contacte mis");
+  Serial.println ("_____________________________________________________");
+  delay(tempo);
 }
 
 void option(){
@@ -141,80 +154,35 @@ void outPutResistanceLap(){
 //Sonde airTemp ext 
 //degre();
 airTempValue = analogRead(airTempPin); //airTempValue enregistre la valeur du Pin
-airTempValue = map(airTempValue, 0, 1023, -48, 125); // Regler les deux dernier chiffre avec la valeur constructeur de la sonde airTemp min max
+airTempValue = map(airTempValue, 0, 1023, ATMin, ATMax); // Regler les deux dernier chiffre avec la valeur constructeur de la sonde airTemp min max pour ATMin ATMax dans la declaration des variable
 
   Serial.print ("La temperature exterieur est de ");
   Serial.print (airTempValue); //Affiche sur le port serie la valeur de la variable
   Serial.println ("C° ");
-
-  if (optionValue == 1 ) {
-  int counter;      // Le int sert pour le microcontroleur du modul LAPX9C10X_X9C103
-  float resistance; // Le float sert pour le microcontroleur du modul LAPX9C10X_X9C103
   
-  Serial.println("Using absolute counter changes");  
-  counter = 0 ;     //On ecrit la valeur du counter de 0 à 99 Mapé 0 Ohms à 10K Ohms(Voire tableau de correspondance en bas de code)
-    Serial.print("Increasing, counter = ");
-    Serial.print(counter);
-    led.set(counter);
-    Serial.print(", new resistance = ");
-    Serial.print(led.getK());
-    Serial.println("KOhms");
-    delay(tempo);
-  }
+  int counter;      // Le int sert pour le microcontroleur du modul LAPX9C10X_X9C103
+  float resistance; // Le float sert pour le microcontroleur du modul LAPX9C10X_X9C103
+         if (optionValue  == 4){ //Si Option 4 est enclanchée
+               if (airTempValue > 0 ) { counter = map(airTempValue, 0, 30, 99, 69);} //on mets le counter mapé avec les valeurs entre ()
+          else if (airTempValue <= 0) { counter = 99 ; }                             //sinon on met au mac de l'option 4
+           }
 
-  else if (optionValue  == 2){
-  int counter;      // Le int sert pour le microcontroleur du modul LAPX9C10X_X9C103
-  float resistance; // Le float sert pour le microcontroleur du modul LAPX9C10X_X9C103
-  Serial.println("Using absolute counter changes");  
-      if (airTempValue >= 30 ) { counter = 0 ; }
- else if (airTempValue >= 20 && airTempValue < 30) { counter = 9 ; }
- else if (airTempValue >= 10 && airTempValue < 20) { counter = 19 ; }
- else if (airTempValue >=  0 && airTempValue < 10) { counter = 29 ; }
- else if (airTempValue <  0)                       { counter = 39 ; }
-    Serial.print("Increasing, counter = ");
-    Serial.print(counter);
-    led.set(counter);
-    Serial.print(", new resistance = ");
-    Serial.print(led.getK());
-    Serial.println("KOhms");
-    delay(tempo);
-  }
- else if (optionValue  == 3){
-  int counter;      // Le int sert pour le microcontroleur du modul LAPX9C10X_X9C103
-  float resistance; // Le float sert pour le microcontroleur du modul LAPX9C10X_X9C103
-  Serial.println("Using absolute counter changes");  
-      if (airTempValue >= 30 ) { counter = 0 ; }
- else if (airTempValue >= 20 && airTempValue < 30) { counter = 39 ; }
- else if (airTempValue >= 10 && airTempValue < 20) { counter = 49 ; }
- else if (airTempValue >=  0 && airTempValue < 10) { counter = 59 ; }
- else if (airTempValue < 0)                        { counter = 69 ; }
-    Serial.print("Increasing, counter = ");
-    Serial.print(counter);
-    led.set(counter);
-    Serial.print(", new resistance = ");
-    Serial.print(led.getK());
-    Serial.println("KOhms");
-    delay(tempo);
-  }
- 
-  else if (optionValue  == 4){
-  int counter;      // Le int sert pour le microcontroleur du modul LAPX9C10X_X9C103
-  float resistance; // Le float sert pour le microcontroleur du modul LAPX9C10X_X9C103
-  Serial.println("Using absolute counter changes");  
-      if (airTempValue >= 30 ) { counter = 0 ; }
- else if (airTempValue >= 20 && airTempValue < 30) { counter = 69 ; }
- else if (airTempValue >= 10 && airTempValue < 20) { counter = 79 ; }
- else if (airTempValue >=  0 && airTempValue < 10) { counter = 89 ; }
- else if (airTempValue < 0)                        { counter = 99 ; }
-    Serial.print("Increasing, counter = ");
-    Serial.print(counter);
-    led.set(counter);
-    Serial.print(", new resistance = ");
-    Serial.print(led.getK());
-    Serial.println("KOhms");
-    delay(tempo);
-  }
+    else if (optionValue  == 3){ //Si Option 3 est enclanchée
+               if (airTempValue > 0 ) {counter = map(airTempValue, 0, 30, 69, 39);} //on mets le counter mapé avec les valeurs entre ()
+          else if (airTempValue <= 0) { counter = 69 ; }                            //sinon on met au mac de l'option 3
+          } 
 
+    else if (optionValue  == 2){ //Si Option 2 est enclanchée
+                if (airTempValue > 0 ) {counter = map(airTempValue, 0, 30, 39, 9);} //on mets le counter mapé avec les valeurs entre ()
+           else if (airTempValue <= 0) { counter = 39 ; }                           //sinon on met au mac de l'option 2
+          }
+
+    else if (optionValue  == 1) {counter = 0 ;} //Si Option 1 est enclanchée on mets le counter a 0 ce qui équivau a une resistance du Lap de 0 ohms
+
+  Serial.print("Le counter = ");
+  Serial.print(counter);
+  led.set(counter); //On envoie la variable au module LAP
+  Serial.println(" ce qui équiveau à ");
   return (led.getK());
 }
 
@@ -226,13 +194,22 @@ void degre (){
   airTempValue = (1.0 / (c1 + c2*logR2 + c3*logR2*logR2*logR2));
   airTempValue = airTempValue - 273.15;
  // airTempValue = (airTempValue * 9.0)/ 5.0 + 32.0; 
-  delay(10);
+  //delay(10);
 
   return(airTempValue);
 
 }
 
+void DTC(){
+       if (airTempValue == ATMin) {DTC_AT = 1 ;} //Si la valeur min à été ateinte alor deffaut 
+  else if (airTempValue == ATMax) {DTC_AT = 1 ;} //Si la valeur max à été ateinte alor deffaut 
+  else {DTC_AT = 0 ;}                            //Sinon pas de deffaut
 
+Serial.print ("DTC = ");
+Serial.println (DTC_AT);
+
+return (DTC_AT);
+}
 
 /** Tableau de correspondance :
 01:14:21.757 -> Starting, set to minimum resistance
