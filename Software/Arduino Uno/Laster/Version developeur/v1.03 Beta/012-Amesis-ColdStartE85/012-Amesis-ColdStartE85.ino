@@ -63,7 +63,7 @@ void setup(){
   
   Serial.begin(115200);  // Initialisation de la liaison serie 
   Serial.println("Demarrage du système "); 
-  Serial.println("09/10/2022 Projet : Amesis-ColdStartE85  Firmware Version : v1.03 Beta ");
+  Serial.println("09/10/2022 Projet : Amesis-ColdStartE85  SW Firmware Version : v1.03 Beta | HW : v0.01Dev");
   delay(50); 
   led.begin(-1); // Initialisation à 0 Ohms du modul LAPX9C103
   delay(50);
