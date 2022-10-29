@@ -59,7 +59,7 @@ void setup(){
   pinMode (jpOption1Pin, INPUT_PULLUP) ; //Declaration de entré Jumpeur un PullUp
   pinMode (jpOption2Pin, INPUT_PULLUP) ; //Declaration de entré Jumpeur un PullUp
   
-  Serial.begin(115100);  // Initialisation de la liaison serie 
+  Serial.begin(115200);  // Initialisation de la liaison serie 
   Serial.println("Demarrage du système "); 
   Serial.println("09/10/2022 Projet : Amesis-ColdStartE85  Firmware Version : v1.00 Beta ");
   delay(50); 
