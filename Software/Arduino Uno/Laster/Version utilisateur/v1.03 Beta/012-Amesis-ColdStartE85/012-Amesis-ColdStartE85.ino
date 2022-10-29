@@ -4,17 +4,18 @@
 // Amesis Project
 // 09/10/2022
 // Projet : Amesis-ColdStartE85
-// Version : v1.03 Beta
-// Description : Ce programme a pour but de hacker une sonde de temperature de liquide de refroidissement pour que les véhicule passer a l'e85 demmarre correctement
+// Version SW : v1.03 Beta
+// Version HW : v0.01 Dev 
+// Description : Ce programme a pour but de hacker une sonde de temperature de liquide de refroidissement pour que les véhicule passers à l'e85 demmarre correctement
 //               Nos 1er tests seront réaliser sur une VW Golf IV 1.6L 16v.
-//               Le but est de leurer le calculateur en lui faisant croie que la temperature de liquide de refroidissement est extremement froide ce qui change les valeurs
-//               choisis dans les cartographie d'injection et d'allumage. 
+//               Le but est de leurer le calculateur en lui faisant croire que la temperature de liquide de refroidissement est extremement froide ce qui change les valeurs
+//               choisis dans les cartographies d'injections et d'allumages. 
 //               Le code utilise une sonde de temperature pour adapter les valeurs en fonction de la temperature de LR et lisse progressivement le leure.
 //  Option 1 : Pas de Jumpers d'installés : Le systeme fait comme si tout été d'orige, aucune resistance de ragoutée
 //  Option 2 : Un Jumpeur entre 1 & 2 : ajout d'une resistance faible en plus de la sonde de LR d'origne               
 //  Option 3 : Un Jumpeur entre 2 & 3 : ajout d'une resistance mayenne en plus de la sonde de LR d'origine
 //  Option 4 : Les deux jumpeurs 1 & 2 & 3 : les valeur maximum sont ajouté en + de la sonde de temparature d'orige.
-// Avertissement : Ce système et aucunnement omologué pour une utilisation sur voix public. Il modiffie les données constructeur et 
+// Avertissement : Ce système et aucunnement homologué pour une utilisation sur voix public. Il modiffie les données constructeur et 
 //                 ceci peut créer un deffaut moteur de temperature valeur de sonde dépassé et autre DTC. Voir la destruction du moteur. Comme ça vous êtes prevenue.
 //                 Les valeurs de resistance peuvent être ajuster dans la fonction "void outPutResistanceLap()" dnas le Mapage. Le tebleau de correspondance est affiché en fin de code.  
 
@@ -22,9 +23,9 @@
 
 int airTempPin = A7 ;            // A7 Pin de la sonde de temperature d'air 
 int airTempValue ;               // Variable pour la valeur de la temperature 
-int ATMin = -48 ;                // Calibration de la sonde de temperature valeur mini
+int ATMin = -90 ;                // Calibration de la sonde de temperature valeur mini
 int ATMax = 125 ;                // Calibration de la sonde de temperature valeur Maxi
-int ATOffSet = -15;              // L'OffSet est le dacalage de la valeur si besoin d'origine elle est à zéro
+int ATOffSet =   0;              // L'OffSet est le dacalage de la valeur si besoin d'origine elle est à zéro (provoque un decalage qui perturbe le DTC)
 int DTC_AT ;                     // Deffaut de la sonde de temperature
 int jpOption1Pin = 10 ;          // 10 Pin pour le jumpeur 1
 int jpOption1Value ;             // Variable boleene pour le Jumpeur 1
@@ -37,9 +38,9 @@ unsigned long coldStart = 60000 ;// Temps du ColdStart avant de basculer un vale
 
 //Pour ce programme le module potentiometre numerique LAPX9C103 10Kohms à été choisis (Pour les autres variantes,Changez la valeur dans la ligne : LapX9C10X led(INCPIN, UDPIN, CSPIN, LAPX9C10X_X9C103);) 
 //Pins de comunication entre l'arduino et le module LAPX9C103
-#define CSPIN 7   // 1 - !INC - pin 7
-#define INCPIN 5  // 2 - U/!D - pin 5
-#define UDPIN 6   // 7 - !CS  - pin 6
+#define CSPIN 4   // 1 - !INC - pin 7
+#define INCPIN 2  // 2 - U/!D - pin 5
+#define UDPIN 3   // 7 - !CS  - pin 6
 LapX9C10X led(INCPIN, UDPIN, CSPIN, LAPX9C10X_X9C103); // * LAPX9C10X_X9C102(1k)  * LAPX9C10X_X9C103(10k) * LAPX9C10X_X9C503(50k) * LAPX9C10X_X9C104(100k)
 int counter; //variable pour envoyer la commande au modul LAP
 float resistance; //variable qui retourne l'info de la resistance choisis venant du LAP
@@ -62,7 +63,7 @@ void setup(){
   
   Serial.begin(115200);  // Initialisation de la liaison serie 
   Serial.println("Demarrage du système "); 
-  Serial.println("09/10/2022 Projet : Amesis-ColdStartE85  Firmware Version : v1.00 Beta ");
+  Serial.println("09/10/2022 Projet : Amesis-ColdStartE85  Firmware Version : v1.03 Beta ");
   delay(50); 
   led.begin(-1); // Initialisation à 0 Ohms du modul LAPX9C103
   delay(50);
@@ -80,29 +81,76 @@ void loop(){
   Serial.println (" activée ");
 
  DTC(); //Appel a la fonction DTC
-   if (DTC_AT == 1) { //Si il y a un deffaut
-        Serial.println ("ColdStart DTC MODE = ON"); 
-        counter = 99 ; 
-        for (int i=0; i<99; i++) { // Incrementation de 99 car le LAP a une plage de 0 à 99
+   if (DTC_AT == 1) { //Si il n'y a pas l'option sonde de temperature du module
+        Serial.println ("ColdStart Sans option de sonde de temperature"); 
+        
+        if (optionValue == 4){
+            counter = 99 ; 
+            
+            for (int i=0; i<99; i++) { // Incrementation de 99 car le LAP a une plage de 0 à 99
               counter = counter - 1 ; // on enlève 1 a counter pour rappel counter 99 = 100K ohms 0 = 0 ohm (voire tableau en fin de code)
               Serial.print ("Le counter = ") ;
               Serial.println (counter) ;
               led.set(counter);
               delay (coldStart/60) ; // delay pour la boucle for en fonction du delay du coldStart choisi dans la declaration des variables
-             }
-        for (int j=0; j<1;){ // boucle for pour verouiller la boucle et ne plus en sortir.
-              Serial.println ("ColdStart DTC MODE = OVER");
+              }
+            for (int j=0; j<1;){ // boucle for pour verouiller la boucle et ne plus en sortir.
+              Serial.println ("Fin du mode ColdStart");
               counter = 0 ;  
               led.set(counter);
-              delay (1000);
+              delay (600); // ce chiffre est calculer en faisent 60/100= 0,6s 60seconde / 100 tour de boucle for = 0.6s 
+              }
         }
-        
+        else if (optionValue == 3){
+                 counter = 69 ; 
+           
+                 for (int i=0; i<69; i++) { // Incrementation de 99 car le LAP a une plage de 0 à 69
+                   counter = counter - 1 ; // on enlève 1 a counter pour rappel counter 99 = 100K ohms 0 = 0 ohm (voire tableau en fin de code)
+                   Serial.print ("Le counter = ") ;
+                   Serial.println (counter) ;
+                   led.set(counter);
+                   delay (coldStart/60) ; // delay pour la boucle for en fonction du delay du coldStart choisi dans la declaration des variables
+                   }
+                for (int j=0; j<1;){ // boucle for pour verouiller la boucle et ne plus en sortir.
+                  Serial.println ("Fin du mode ColdStart");
+                  counter = 0 ;  
+                  led.set(counter);
+                  delay (869);
+                  }
+        }
+        else if (optionValue == 2){
+                 counter = 39 ; 
+                
+                for (int i=0; i<39; i++) { // Incrementation de 39 car le LAP a une plage de 0 à 99
+                  counter = counter - 1 ; // on enlève 1 a counter pour rappel counter 99 = 100K ohms 0 = 0 ohm (voire tableau en fin de code)
+                  Serial.print ("Le counter = ") ;
+                  Serial.println (counter) ;
+                  led.set(counter);
+                  delay (coldStart/60) ; // delay pour la boucle for en fonction du delay du coldStart choisi dans la declaration des variables
+                  }
+               for (int j=0; j<1;){ // boucle for pour verouiller la boucle et ne plus en sortir.
+                 Serial.println ("Fin du mode ColdStart");
+                 counter = 0 ;  
+                 led.set(counter);
+                 delay (1538);
+                 }
+        }
+         else if (optionValue == 1){
+                 counter =  0; 
+               
+               for (int j=0; j<1;){ // boucle for pour verouiller la boucle et ne plus en sortir.
+                 Serial.println ("Fin du mode ColdStart");
+                 counter = 0 ;  
+                 led.set(counter);
+                 delay (1538);
+                 }
+        }
  }
  else if (currentMillis < coldStart){
   Serial.println ("ColdStart = ON");
 
  outPutResistanceLap(); // Appel de la fonction 
-  Serial.print ("une résistance de sortie de Lap est de ");
+  Serial.print ("une résistance de sortie du module est de ");
   Serial.print (led.getK());
   Serial.println (" Khoms");
  }
@@ -112,7 +160,7 @@ void loop(){
   float resistance; // Le float sert pour le microcontroleur du modul LAPX9C10X_X9C103
   counter = 0 ;     //On ecrit la valeur du counter de 0 à 99 Mapé 0 Ohms à 10K Ohms(Voire tableau de correspondance en bas de code)
     led.set(counter);
-    Serial.print ("Le programme ce deroule sans ajout, la resistance du Lap de ");
+    Serial.print ("Le programme ce deroule sans ajout, la resistance du module est de ");
     Serial.print (led.getK());
     Serial.println ("Khoms");
   }
@@ -156,11 +204,11 @@ void outPutResistanceLap(){
  //Sonde airTemp ext 
  //degre();
  airTempValue = analogRead(airTempPin); //airTempValue enregistre la valeur du Pin
- airTempValue = map(airTempValue, 0, 1023, ATMin, ATMax) + ATOffSet ; // Regler les deux dernier chiffre avec la valeur constructeur de la sonde airTemp min max pour ATMin ATMax dans la declaration des variable
+ airTempValue = map(airTempValue, 0, 1023, ATMin, ATMax) + ATOffSet ; // Regler les deux dernier chiffre avec la valeur constructeur de la sonde airTemp min max pour ATMin ATMax dans la declaration des variable + offset si besoin
 
-  Serial.print ("La temperature exterieur est de ");
-  Serial.print (airTempValue); //Affiche sur le port serie la valeur de la variable
-  Serial.println ("C° ");
+ // Serial.print ("La temperature exterieur est de "); //a desactiver pour la version client
+ // Serial.print (airTempValue); //Affiche sur le port serie la valeur de la variable
+ // Serial.println ("C° ");
   
   //int counter;      // Le int sert pour le microcontroleur du modul LAPX9C10X_X9C103
   //float resistance; // Le float sert pour le microcontroleur du modul LAPX9C10X_X9C103
