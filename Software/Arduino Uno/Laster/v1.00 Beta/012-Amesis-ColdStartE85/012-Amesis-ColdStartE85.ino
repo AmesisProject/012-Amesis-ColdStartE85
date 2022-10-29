@@ -20,7 +20,7 @@
 
 #include "LapX9C10X.h" //Librairie 
 
-int airTempPin = A0 ;            // A7 Pin de la sonde de temperature d'air 
+int airTempPin = A7 ;            // A7 Pin de la sonde de temperature d'air 
 int airTempValue ;               // Variable pour la valeur de la temperature 
 int ATMin = -48 ;                // Calibration de la sonde de temperature valeur mini
 int ATMax = 125 ;                // Calibration de la sonde de temperature valeur Maxi
@@ -44,7 +44,7 @@ int counter; //variable pour envoyer la commande au modul LAP
 float resistance; //variable qui retourne l'info de la resistance choisis venant du LAP
 
 //TO DO 
-//Ces variable sont lier a le fonction void degre() qui semble très interresente pouir le calibrage des sonde AirTemperature Mais pas utilisé dans cette V1.00 Beta
+//Ces variable sont lier a le fonction void degre() qui semble très interresente pour le calibrage des sonde AirTemperature Mais pas utilisé dans cette V1.00 Beta
 //Fonction pour les valeur en degré C° pour la fonction "void degre()"
 int Vo;
 float R1 = 10000;
@@ -60,7 +60,9 @@ void setup(){
   pinMode (jpOption2Pin, INPUT_PULLUP) ; //Declaration de entré Jumpeur un PullUp
   
   Serial.begin(115100);  // Initialisation de la liaison serie 
-  Serial.println("Demarrage du système ");  
+  Serial.println("Demarrage du système "); 
+  Serial.println("09/10/2022 Projet : Amesis-ColdStartE85  Firmware Version : v1.00 Beta ");
+  delay(50); 
   led.begin(-1); // Initialisation à 0 Ohms du modul LAPX9C103
   delay(50);
 }
