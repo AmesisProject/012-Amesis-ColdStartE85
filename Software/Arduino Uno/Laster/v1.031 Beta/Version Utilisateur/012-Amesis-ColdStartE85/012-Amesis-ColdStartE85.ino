@@ -4,7 +4,7 @@
 // Amesis Project
 // 09/10/2022
 // Projet : Amesis-ColdStartE85
-// Version SW : v1.03 Beta
+// Version SW : v1.031 Beta
 // Version HW : v0.01 Dev 
 // Description : Ce programme a pour but de hacker une sonde de temperature de liquide de refroidissement pour que les véhicule passers à l'e85 demmarre correctement
 //               Nos 1er tests seront réaliser sur une VW Golf IV 1.6L 16v.
@@ -61,12 +61,15 @@ void setup(){
   pinMode (jpOption1Pin, INPUT_PULLUP) ; //Declaration de entré Jumpeur un PullUp
   pinMode (jpOption2Pin, INPUT_PULLUP) ; //Declaration de entré Jumpeur un PullUp
   
+  led.begin(-1); // Initialisation à 0 Ohms du modul LAPX9C103
+  //delay(50);
+  
   Serial.begin(115200);  // Initialisation de la liaison serie 
   Serial.println("Demarrage du système "); 
-  Serial.println("09/10/2022 Projet : Amesis-ColdStartE85  SW Firmware Version : v1.03 Beta | HW : v0.01Dev");
-  delay(50); 
+  Serial.println("09/10/2022 Projet : Amesis-ColdStartE85  SW Firmware Version : v1.031 Beta | HW : v0.01Dev");
+ // delay(50); 
   led.begin(-1); // Initialisation à 0 Ohms du modul LAPX9C103
-  delay(50);
+  //delay(50);
 }
 
 //Demmarage du programme
@@ -206,9 +209,9 @@ void outPutResistanceLap(){
  airTempValue = analogRead(airTempPin); //airTempValue enregistre la valeur du Pin
  airTempValue = map(airTempValue, 0, 1023, ATMin, ATMax) + ATOffSet ; // Regler les deux dernier chiffre avec la valeur constructeur de la sonde airTemp min max pour ATMin ATMax dans la declaration des variable + offset si besoin
 
-  Serial.print ("La temperature exterieur est de "); //a desactiver pour la version client
-  Serial.print (airTempValue); //Affiche sur le port serie la valeur de la variable
-  Serial.println ("C° ");
+ // Serial.print ("La temperature exterieur est de "); //a desactiver pour la version client
+ // Serial.print (airTempValue); //Affiche sur le port serie la valeur de la variable
+ // Serial.println ("C° ");
   
   //int counter;      // Le int sert pour le microcontroleur du modul LAPX9C10X_X9C103
   //float resistance; // Le float sert pour le microcontroleur du modul LAPX9C10X_X9C103
