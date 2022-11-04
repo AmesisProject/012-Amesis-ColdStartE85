@@ -3,20 +3,27 @@
 012-Amesis-ColdStartE85
 Module d’aide au démarrage à froid pour les moteurs utilisant le carburant Superéthanol E85 dont la cartographie de démarrage à froid n’a pas été réglé.
 Les conventions des moteurs à l’éthanol ont généralement un souci mangeur, c’est le ColdStart.
+
 En effet, l’éthanol à son point éclaire à 7 degrés contre -40 pour le super sans plomb. Ce qui entraine donc un démarrage plus difficile voire impossible. 
+
 Module mise au point pour le moteur de Golf IV 1.6L 16v essence passé à l’E85. Equipé du calculateur Magneti Marelli 4MV, mais peut fonctionner sur d’autre model tel quel. A vous d’analyser vos capteurs et signaux pour modifier le code.   
 
+<img src="https://github.com/AmesisProject/012-Amesis-ColdStartE85/blob/main/Image/GSKZ1418.JPG?raw=true" alt="Speeduino" width="600" />
 
 
 
-
-
-
-I Avertissement
+## I Avertissement
+ 
 Ce module n’est nullement homologué, il sera donc fourni à but de test et non à une utilisation sur voie public.
+ 
 Ce module modifiant le signal d’un capteur d’origine, les possibilités d’endommagement de l’ECU ou du moteur reste donc une éventualité. Vous restez seul responsable de l’utilisation de ce module. 
- Ce module agissant sur des capteurs d’origine du véhicule pourrait entrainer des codes défaut moteur intermittent ou permanant, dans ce cas il est déconseillé de l’utiliser. 
-Le module a pour but de décaler la plage de temperature du liquide de refroidissement ce qui correspond à des valeurs d’injection et d’allumage plus importante dans les cartographies moteur. Ces cartographies sont généralement très difficiles à modifier car le mappeur doit attendre une température adéquate pour son réglage car le moindre démarrage moteur réchauffe instantanément et rapidement le moteur du fait de la compression de l’air et de la combustion. Il faut attendre plusieurs heures afin de retenter un nouveau réglage, ce qui est parfois laborieux pour les mappeurs. C’est donc pour cela que ce module a été créer. 
+ 
+Ce module agissant sur des capteurs d’origine du véhicule pourrait entrainer des codes défaut moteur intermittent ou permanant, dans ce cas il est déconseillé de l’utiliser. 
+ 
+Le module a pour but de décaler la plage de temperature du liquide de refroidissement ce qui correspond à des valeurs d’injection et d’allumage plus importante dans les cartographies moteur. Ces cartographies sont généralement très difficiles à modifier car le mappeur doit attendre une température adéquate pour son réglage car le moindre démarrage moteur réchauffe instantanément et rapidement le moteur du fait de la compression de l’air et de la combustion. Il faut attendre plusieurs heures afin de retenter un nouveau réglage, ce qui est parfois laborieux pour les mappeurs. 
+
+C’est donc pour cela que ce module a été créer. 
+ 
 De plus les cartographies de démarrage à froid « cold star » sur les calculateurs ECU Magneti Marelli 4MV sont encore un mystère dans notre communauté.
 
 Cette documentation consterne le module en version matériel 
@@ -28,19 +35,21 @@ Vous pouvez nous faire une proposition de modification de cade pas « Pull Reque
 https://github.com/AmesisProject/012-Amesis-ColdStartE85
 
 
-
-
-
-
-
-II Schéma de câblage
+## II Schéma de câblage
+ 
 Type de branchement possible
 Chercher et trouver la sonde de temperature du liquide de refroidissement.
+ 
 La sonde G2 chez le groupe VAG informe la temperature au compteur.
-La sonde G62 chez le groupe VAG informe la temperature au calculateur moteur (ECU)
+ 
+La sonde G62 chez le groupe VAG informe la temperature au calculateur moteur (ECU).
+ 
 Pour ce module c’est la sonde de temperature moteur qui nous intéresse. 
-Ceci a été tester sur une Golf IV 1.6L 16s équipé d’un ECU Magneti Marelli. Ce qui est impotent c’est que la sonde de température du véhicule soit de type NTC c’est à dire que plus elle se réchauffe plus sa résistance réduit (plus elle se rapproche de 0.00 Ohm)
-Le module doit être raccordé à un plus après contacte et protégé par un fusible 1A (à vérifier suivant la consommation de courant du module)
+ 
+Ceci a été tester sur une Golf IV 1.6L 16s équipé d’un ECU Magneti Marelli. Ce qui est impotent c’est que la sonde de température du véhicule soit de type NTC c’est à dire que plus elle se réchauffe plus sa résistance réduit (plus elle se rapproche de 0.00 Ohm).
+ 
+Le module doit être raccordé à un plus après contacte et protégé par un fusible 1A (à vérifier suivant la consommation de courant du module) :
+ 
 1)	Sonde à 2 fils (nommer G62 chez le groupe VAG)
  
 2)	Sonde à 4 fils (nommer G2 et G62 chez lez groupe VAG, les deux sondes sont dans le même boitier)
@@ -53,7 +62,8 @@ Le module doit être raccordé à un plus après contacte et protégé par un fu
 
 
 
-III Options du module
+## III Options du module
+ 
   Le module est équipé des trois Pins accessible, se qui permet de sélectionner les options.
 1)	 Option 1
 Aucun jumpeur d’installer :
