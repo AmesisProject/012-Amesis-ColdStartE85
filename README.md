@@ -8,7 +8,7 @@ En effet, l’éthanol à son point éclaire à 7 degrés contre -40 pour le sup
 
 Module mise au point pour le moteur de Golf IV 1.6L 16v essence passé à l’E85. Equipé du calculateur Magneti Marelli 4MV, mais peut fonctionner sur d’autre model tel quel. A vous d’analyser vos capteurs et signaux pour modifier le code.   
 
-<img src="https://github.com/AmesisProject/012-Amesis-ColdStartE85/blob/main/Image/GSKZ1418.JPG?raw=true" alt="Speeduino" width="600" />
+<img src="https://github.com/AmesisProject/012-Amesis-ColdStartE85/blob/main/Hardware/v0.01_dev/Visu/GSKZ1418.JPG" width="600" />
 
 
 
@@ -51,9 +51,10 @@ Ceci a été tester sur une Golf IV 1.6L 16s équipé d’un ECU Magneti Marelli
 Le module doit être raccordé à un plus après contacte et protégé par un fusible 1A (à vérifier suivant la consommation de courant du module) :
  
 1)	Sonde à 2 fils (nommer G62 chez le groupe VAG)
+ <img src="https://github.com/AmesisProject/012-Amesis-ColdStartE85/blob/main/Manuel%20d'utilisation/1.png" width="600" />
  
 2)	Sonde à 4 fils (nommer G2 et G62 chez lez groupe VAG, les deux sondes sont dans le même boitier)
- 
+ <img src="https://github.com/AmesisProject/012-Amesis-ColdStartE85/blob/main/Manuel%20d'utilisation/2.png" width="600" />
 
 
 
@@ -67,22 +68,22 @@ Le module doit être raccordé à un plus après contacte et protégé par un fu
   Le module est équipé des trois Pins accessible, se qui permet de sélectionner les options.
 1)	 Option 1
 Aucun jumpeur d’installer :
- 
+  <img src="https://github.com/AmesisProject/012-Amesis-ColdStartE85/blob/main/Manuel%20d'utilisation/3.1.png" width="600" />
 Dans ce cas, le module et inactif, une fois le contacte mis, il lesse passe le signal d’origine de la sonde de temperature d’origine.
 
 2)	Option 2
 Ponter le jumpeur entre le pin 1 et le pin 2 :
- 
+   <img src="https://github.com/AmesisProject/012-Amesis-ColdStartE85/blob/main/Manuel%20d'utilisation/3.2.png" width="600" />
 Dans ce cas, le module et activer. Il modifie le signal d’origine pour augmenter légèrement l’enrichissement et/ou l’allumage au démarrage.
 
 3)	Option 3
 Ponter le jumpeur entre le pin 2 et le pin 3 :
- 
+   <img src="https://github.com/AmesisProject/012-Amesis-ColdStartE85/blob/main/Manuel%20d'utilisation/3.3.png" width="600" />
 Dans ce cas, le module et activer. Il modifie le signal d’origine pour augmenter moyennement l’enrichissement et/ou l’allumage au démarrage.
 
 4)	Option 4
 Ponter le jumpeur entre le pin 1, le pin 2 et le pin 3 :
- 
+   <img src="https://github.com/AmesisProject/012-Amesis-ColdStartE85/blob/main/Manuel%20d'utilisation/3.4.png" width="600" />
 Dans ce cas, le module et activer. Il modifie le signal d’origine pour augmenter fortement l’enrichissement et/ou l’allumage au démarrage.
 IV Fonctionnement
 Une fois le contacte mis, 2 solutions :
@@ -94,21 +95,30 @@ Sans l’option la sonde de temperature additionnelle le module sera actif à ch
 2)	Solution 2
 Le module est équipé de la sonde de temperature additionnelle. Celle-ci devra être placer à proximité d’une source de chaleur venant du moteur, par exemple une durite de liquide de refroidissement du circuit cour. 
 La sonde de temperature additionnelle ne doit pas être installer en contacte direct avec des organes du moteur pouvant dépasser une centaine de degré sous peine de risque de détérioration de la sonde voir pire risque d’incendies. 
-
+  <img src="https://github.com/AmesisProject/012-Amesis-ColdStartE85/blob/main/Manuel%20d'utilisation/4.png" width="600" />
+  
 Suivant l’option engagé, si le module a bien la sonde de temperature additionnelle, il sera en mesure de comprendre s’il est nécessaire d’activer l’enrichissement à froid suivant la temperature à la sonde de temperature additionnelle.
 
 Pour la version du HW Firmware v1.031 béta, le seuil de d’déclanchement est approximativement en dessous des 30° de la sonde de temperature additionnelle. Si cette valeur et dépassé, alors le module passe en mode inactif car au-delà de cette temperature, le mode enrichissement à froid est inutile.
 Cette valeur pourra être ajusté à la demande si besoin par une mise à jour FW.
 
-V Communication
+## V Communication
+
 Le module est pourvu d’un port USB. Il permet de communiquer avec un ordinateur pour contrôler la version du SW HW et les valeurs retournées du module car le décompte du « cold start » et option engagé.
 
 Pour afficher ces valeurs, vous devez vous munir d’un ordinateur Windows, Mac ou Linux avec le logiciel gratuit IDE Arduino d’installer.
 
 Dans le logiciel vous devrez choisir l‘adresse du port USB utilisé par ex :
+
 -Sur Windows Onglet « Outils » -> « Port » -> « Port Com 4 » 
+
 -Puis ouvrir la console de debug avec l’icône loupe en haut à droite de la fenetre du logiciel Arduino.
+
 -Régler la vitesse sur 115200 Baud
+
 Et les valeurs commenceront à défiler dans la fenetre.
-ATTENTION Ce logiciel peut écraser les données du microcontrôleur si vous téléverser un nouveau code. Il faudra obligatoirement téléverser le code d’origine pour que le module refonctionne normalement.
+
+ATTENTION Ce logiciel peut écraser les données du microcontrôleur si vous téléverser un nouveau code. 
+
+Il faudra obligatoirement téléverser le code d’origine pour que le module refonctionne normalement.
 
