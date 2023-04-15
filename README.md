@@ -1,5 +1,6 @@
 # 012-Amesis-ColdStartE85
  Version 1.00 du document ( Vous pouvez me commander des PCB, faites vos demandes à amesisproject@gmail.com)
+ 
 012-Amesis-ColdStartE85
 Module d’aide au démarrage à froid pour les moteurs utilisant le carburant Superéthanol E85 dont la cartographie de démarrage à froid n’a pas été réglé.
 Les conventions des moteurs à l’éthanol ont généralement un souci mangeur, c’est le ColdStart.
@@ -124,6 +125,7 @@ Il faudra obligatoirement téléverser le code d’origine pour que le module re
 
 #Don 
 
-J'ai travaillé ennormement sur ce projet etre le code, la fabrication du PCB et les test sur la Golf IV 1.6L essese de Mich. Me faire un don me motive pour continuer de mettre en ligne des projet gratuitement.
+J'ai travaillé ennormement sur ce projet entre le code, la fabrication du PCB et les testes sur la Golf IV 1.6L essese de Mich. Me faire un don me motive pour continuer de mettre en ligne des projets gratuitement.
+
 https://www.paypal.com/donate/?cmd=_s-xclick&hosted_button_id=R9SMSS8L6FZB2&source=url&ssrt=1681586896608
 
