@@ -1,5 +1,5 @@
 # 012-Amesis-ColdStartE85
- Version 1.00 du document
+ Version 1.00 du document ( Vous pouvez me commander des PCB, faites vos demandes à amesisproject@gmail.com)
 012-Amesis-ColdStartE85
 Module d’aide au démarrage à froid pour les moteurs utilisant le carburant Superéthanol E85 dont la cartographie de démarrage à froid n’a pas été réglé.
 Les conventions des moteurs à l’éthanol ont généralement un souci mangeur, c’est le ColdStart.
