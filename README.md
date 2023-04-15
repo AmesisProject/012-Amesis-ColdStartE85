@@ -123,5 +123,7 @@ ATTENTION Ce logiciel peut écraser les données du microcontrôleur si vous té
 Il faudra obligatoirement téléverser le code d’origine pour que le module refonctionne normalement.
 
 #Don 
+
+J'ai travaillé ennormement sur ce projet etre le code, la fabrication du PCB et les test sur la Golf IV 1.6L essese de Mich. Me faire un don me motive pour continuer de mettre en ligne des projet gratuitement.
 https://www.paypal.com/donate/?cmd=_s-xclick&hosted_button_id=R9SMSS8L6FZB2&source=url&ssrt=1681586896608
 
