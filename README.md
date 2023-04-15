@@ -122,3 +122,6 @@ ATTENTION Ce logiciel peut écraser les données du microcontrôleur si vous té
 
 Il faudra obligatoirement téléverser le code d’origine pour que le module refonctionne normalement.
 
+#Don 
+https://www.paypal.com/donate/?cmd=_s-xclick&hosted_button_id=R9SMSS8L6FZB2&source=url&ssrt=1681586896608
+
